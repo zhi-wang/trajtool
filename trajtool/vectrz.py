@@ -15,7 +15,7 @@ class Vectrz:
         return cart.dot(np.transpose(R))
 
     @classmethod
-    def image(cls, r: np.array, box: PBC):
+    def image(cls, r: np.array, box: PBC) -> np.array:
         f1 = cls.c2f(r, box.rpbc)
         f2 = f1 - np.floor(0.5 + f1)
         return cls.f2c(f2, box.pbc)
@@ -40,5 +40,10 @@ class Vectrz:
             c[lst] = r0 + c0 / na
         return c
 
-    # @classmethod
-    # def geom_center()
+    @classmethod
+    def geom_center(cls, coords: np.array, atoms: np.array, box: PBC) -> np.array:
+        na = len(atoms)
+        r0 = coords[atoms[0]]
+        rs = coords[atoms] - r0
+        c0 = np.sum(cls.image(rs, box), axis=0)
+        return r0 + c0 / na
