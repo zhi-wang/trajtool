@@ -4,6 +4,24 @@ import MDAnalysis as mda
 import numpy as np
 
 
+class Index0:
+
+    Group = list[np.array]
+
+    @classmethod
+    def new_pos(cls, group: Group, n: int) -> np.array:
+        p, count = np.zeros(n), 0
+        for i, m in group:
+            p[m] = i
+            count += len(m)
+        assert n == count
+        return p
+
+    @classmethod
+    def filt0(cls, group: Group) -> np.array:
+        return np.array([lst[0] for lst in group])
+
+
 class TFile:
 
     def __init__(self, args: argparse.Namespace):
@@ -23,25 +41,22 @@ class TFile:
             self.refu = mda.Universe(args.input[0])
             self.refu.transfer_to_memory()
 
-    def index0_molecule_atoms(self) -> tuple[list[list[int]], list[int]]:
+    def molecule_atoms(self) -> Index0.Group:
         lst = []
         start = 0
         for na, nmol in zip(self.msizes, self.gsizes):
             for _imol in range(nmol):
-                lst.append(list(range(start, start + na)))
+                lst.append(np.array(range(start, start + na)))
                 start += na
-        pos = np.zeros(self.natoms)
-        for i, m in enumerate(lst):
-            pos[m] = i
-        return lst, pos.tolist()
+        return lst
 
-    def index0_residule_atoms(self) -> tuple[list[list[int], list[int]]]:
+    def residule_atoms(self) -> Index0.Group:
         lst = []
         for res in self.universe.residues:
             l2 = [a.index for a in res.atoms]
             l2.sort()
-            lst.append(l2)
-        pos = np.zeros(self.natoms)
-        for i, m in enumerate(lst):
-            pos[m] = i
-        return lst, pos.tolist()
+            lst.append(np.array(l2))
+        return lst
+
+    def backbone_atoms(self) -> np.array:
+        return np.array([int(a.index) for a in self.universe.select_atoms("backbone")])
