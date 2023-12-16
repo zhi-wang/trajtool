@@ -37,9 +37,16 @@ class TFile:
         self.natoms = self.universe.atoms.n_atoms
         assert sum(self.gsizes * self.msizes) == self.natoms
 
+        if hasattr(args, "out"):
+            self.out = args.out
+
         if args.option == "superpose":
             self.refu = mda.Universe(args.input[0])
             self.refu.transfer_to_memory()
+
+    def write_traj(self):
+        ag = self.universe.select_atoms(f"id 1:{self.natoms}")
+        ag.write(self.out, frames=self.universe.trajectory[:])
 
     def molecule_atoms(self) -> Index0.Group:
         lst = []

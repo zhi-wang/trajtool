@@ -1,6 +1,9 @@
 import argparse
 import sys
 
+from .superpose import superpose
+from .tfile import TFile
+
 
 def get_args():
     option = str.lower(sys.argv[1])
@@ -17,6 +20,10 @@ def get_args():
 
 def mainfunc():
     args = get_args()
+    if args.option == "superpose":
+        tf = TFile(args)
+        superpose(tf)
+        tf.write_traj()
 
 
 if __name__ == "__main__":
