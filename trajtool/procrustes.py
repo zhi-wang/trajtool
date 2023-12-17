@@ -1,9 +1,10 @@
 from typing import Tuple
 
 import numpy as np
+from numpy.typing import NDArray
 
 
-def solve(src: np.array, ref: np.array) -> Tuple[np.array, float]:
+def solve(src: NDArray, ref: NDArray) -> Tuple[NDArray, float]:
     """
     R = argmin_O |O.A - B| subject to Ot.O = 1.
 

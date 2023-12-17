@@ -2,14 +2,15 @@ import argparse
 
 import MDAnalysis as mda
 import numpy as np
+from numpy.typing import NDArray
 
 
 class Index0:
 
-    Group = list[np.array]
+    Group = list[NDArray]
 
     @classmethod
-    def head(cls, group: Group) -> np.array:
+    def head(cls, group: Group) -> NDArray:
         return np.array([lst[0] for lst in group])
 
 
@@ -54,5 +55,5 @@ class TFile:
             lst.append(np.array(l2))
         return lst
 
-    def backbone_atoms(self) -> np.array:
+    def backbone_atoms(self) -> NDArray:
         return np.array([int(a.index) for a in self.universe.select_atoms("backbone")])
