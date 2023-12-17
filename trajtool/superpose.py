@@ -1,8 +1,7 @@
 import numpy as np
 
-from .misc import geom_center, geom_centers
+from .algo import geom_center, geom_centers, orthogonal_procrustes
 from .pbc import PBC
-from .procrustes import solve as solve_procrustes
 from .tfile import Index0, TFile
 
 
@@ -53,7 +52,7 @@ def superpose(tf: TFile):
 
         # superpose
         b_crds = m_crds[b_indx]
-        R, _rmsd = solve_procrustes(b_crds, b_crds_ref)
+        R, _rmsd = orthogonal_procrustes(b_crds, b_crds_ref)
 
         # save coords
         tf.universe.trajectory[itraj].positions = m_crds.dot(np.transpose(R))
