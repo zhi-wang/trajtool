@@ -43,7 +43,7 @@ def superpose(tf: TFile) -> None:
         for i, lst in enumerate(r_indx):
             r_crds[lst] += rctij[i]
 
-        # move molecule centers in the box
+        # move molecule centers into the box
         m_centers = geom_centers(r_crds, m_indx, box)
         m_crds = r_crds - m_centers + box.image(m_centers)
 
