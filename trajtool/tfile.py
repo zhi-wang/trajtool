@@ -9,24 +9,14 @@ class Index0:
     Group = list[np.array]
 
     @classmethod
-    def new_pos(cls, group: Group, n: int) -> np.array:
-        p, count = np.zeros(n), 0
-        for i, m in group:
-            p[m] = i
-            count += len(m)
-        assert n == count
-        return p
-
-    @classmethod
-    def filt0(cls, group: Group) -> np.array:
+    def head(cls, group: Group) -> np.array:
         return np.array([lst[0] for lst in group])
 
 
 class TFile:
 
     def __init__(self, args: argparse.Namespace):
-        self.universe = mda.Universe(*args.input)
-        self.universe.transfer_to_memory()
+        self.universe = mda.Universe(*args.input, in_memory=True)
 
         self.gsizes = np.array([int(a) for a in args.gsizes])
         self.msizes = np.array([int(a) for a in args.msizes])
@@ -41,8 +31,7 @@ class TFile:
             self.out = args.out
 
         if args.option == "superpose":
-            self.refu = mda.Universe(args.input[0])
-            self.refu.transfer_to_memory()
+            self.refu = mda.Universe(args.input[0], in_memory=True)
 
     def write_traj(self):
         ag = self.universe.select_atoms(f"id 1:{self.natoms}")

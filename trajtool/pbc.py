@@ -15,7 +15,7 @@ class PBC:
         self.pbc, self.rpbc = None, None
 
     @classmethod
-    def from_6_to_3x3(cls, dim6):
+    def from6(cls, dim6):
         """
         Convert (a, b, c, al_deg, be_deg, ga_deg) to
         L = L = [[ax, bx, cx],
