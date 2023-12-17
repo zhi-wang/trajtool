@@ -31,19 +31,20 @@ class Vectrz:
 
     @classmethod
     def geom_centers(cls, coords: np.array, atoms: Index0.Group, box: PBC) -> np.array:
-        c = np.zeros_like(coords)
+        r0 = np.zeros_like(coords)
         for lst in atoms:
-            na = len(lst)
-            r0 = coords[lst[0]]
-            rs = coords[lst] - r0
-            c0 = np.sum(cls.image(rs, box), axis=0)
-            c[lst] = r0 + c0 / na
-        return c
+            r0[lst] = coords[lst[0]]
+        rs = coords - r0
+        rs = cls.image(rs, box)
+
+        c0 = np.zeros_like(coords)
+        for lst in atoms:
+            c0[lst] = np.sum(rs[lst], axis=0) / len(lst)
+        return c0 + r0
 
     @classmethod
     def geom_center(cls, coords: np.array, atoms: np.array, box: PBC) -> np.array:
-        na = len(atoms)
         r0 = coords[atoms[0]]
         rs = coords[atoms] - r0
         c0 = np.sum(cls.image(rs, box), axis=0)
-        return r0 + c0 / na
+        return r0 + c0 / len(atoms)
