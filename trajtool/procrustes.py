@@ -1,7 +1,9 @@
+from typing import Tuple
+
 import numpy as np
 
 
-def solve(src: np.array, ref: np.array):
+def solve(src: np.array, ref: np.array) -> Tuple[np.array, float]:
     """
     R = argmin_O |O.A - B| subject to Ot.O = 1.
 
@@ -12,8 +14,8 @@ def solve(src: np.array, ref: np.array):
 
     Returns R
     """
-    # A = np.transpose(src)
-    # B = np.transpose(ref)
+    # A = np.transpose(src); B = np.transpose(ref)
+    # M = B.At = U.S.Vt;     R = U.Vt
     M = np.transpose(ref).dot(src)
     U, _S, Vt = np.linalg.svd(M)
     R = U.dot(Vt)

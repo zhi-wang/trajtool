@@ -31,7 +31,7 @@ class TFile:
             self.out = args.out
 
         if args.option == "superpose":
-            self.refu = mda.Universe(args.input[0], in_memory=True)
+            self.universe_ref = mda.Universe(args.input[0], in_memory=True)
 
     def write_traj(self):
         ag = self.universe.select_atoms(f"id 1:{self.natoms}")

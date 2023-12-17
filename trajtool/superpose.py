@@ -15,6 +15,12 @@ def superpose(tf: TFile):
     b_indx = tf.backbone_atoms()
     m_indx = tf.molecule_atoms()
 
+    universe_ref = tf.universe_ref
+    box_ref = PBC.from6(universe_ref.dimensions)
+    crds_ref = universe_ref.coord.positions
+    b_ct_ref = Vectrz.geom_center(crds_ref, b_indx, box_ref)
+    b_crds_ref = crds_ref[b_indx] - b_ct_ref
+
     for itraj, traj in enumerate(trajectory):
         jtraj = itraj + 1
         if jtraj % 10 == 0:
@@ -45,6 +51,9 @@ def superpose(tf: TFile):
         # move backbone center to origin
         m_crds -= Vectrz.geom_center(m_crds, b_indx, box)
 
+        # superpose
+        b_crds = m_crds[b_indx]
+        R, _rmsd = solve_procrustes(b_crds, b_crds_ref)
+
         # save coords
-        coords = m_crds
-        tf.universe.trajectory[itraj].positions = coords
+        tf.universe.trajectory[itraj].positions = m_crds.dot(np.transpose(R))
