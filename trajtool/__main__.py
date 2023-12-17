@@ -7,14 +7,15 @@ from .tfile import TFile
 
 def get_args():
     option = str.lower(sys.argv[1])
-    ap = argparse.ArgumentParser()
+    if option == "superpose":
+        ap = argparse.ArgumentParser(prog="trajtool superpose")
+        ap.add_argument("--out", type=str, required=True)
+    else:
+        assert False
     ap.add_argument("--input", nargs="*", required=True)
     ap.add_argument("--gsizes", nargs="*", required=True)
     ap.add_argument("--msizes", nargs="*", required=True)
-    if option == "superpose":
-        ap.add_argument("--out", type=str, required=True)
     args = ap.parse_args(sys.argv[2:])
-    args.option = option
     return args
 
 
