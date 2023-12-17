@@ -5,7 +5,7 @@ from .pbc import PBC
 from .tfile import Index0, TFile
 
 
-def superpose(tf: TFile):
+def superpose(tf: TFile) -> None:
     trajectory = tf.universe.trajectory
 
     r_indx = tf.residule_atoms()
