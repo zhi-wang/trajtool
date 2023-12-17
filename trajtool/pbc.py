@@ -1,6 +1,7 @@
 from enum import IntEnum
 
 import numpy as np
+from numpy.typing import NDArray
 
 
 class PBC:
@@ -15,7 +16,7 @@ class PBC:
         self.pbc, self.rpbc = None, None
 
     @classmethod
-    def from6(cls, dim6):
+    def from6(cls, dim6) -> "PBC":
         """
         Convert (a, b, c, al_deg, be_deg, ga_deg) to
         L = L = [[ax, bx, cx],
@@ -46,5 +47,19 @@ class PBC:
 
         return p
 
-    def f2c(self, frac: np.array):
-        return self.pbc.dot(frac)
+    def f2c(self, frac: NDArray) -> NDArray:
+        if frac.ndim == 2:
+            return frac.dot(np.transpose(self.pbc))
+        else:
+            return self.pbc.dot(frac)
+
+    def c2f(self, cart: NDArray) -> NDArray:
+        if cart.ndim == 2:
+            return cart.dot(np.transpose(self.rpbc))
+        else:
+            return self.rpbc.dot(cart)
+
+    def image(self, r: NDArray) -> NDArray:
+        f1 = self.c2f(r)
+        f2 = f1 - np.floor(0.5 + f1)
+        return self.f2c(f2)

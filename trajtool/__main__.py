@@ -5,7 +5,7 @@ from .superpose import superpose
 from .tfile import TFile
 
 
-def get_args():
+def get_args() -> argparse.Namespace:
     option = str.lower(sys.argv[1])
     if option == "superpose":
         ap = argparse.ArgumentParser(prog="trajtool superpose")
@@ -16,10 +16,11 @@ def get_args():
     ap.add_argument("--gsizes", nargs="*", required=True)
     ap.add_argument("--msizes", nargs="*", required=True)
     args = ap.parse_args(sys.argv[2:])
+    args.option = option
     return args
 
 
-def mainfunc():
+def mainfunc() -> None:
     args = get_args()
     if args.option == "superpose":
         tf = TFile(args)

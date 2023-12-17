@@ -37,16 +37,16 @@ def superpose(tf: TFile):
         rctij = np.copy(rct_i)
         rctij[0] = np.zeros(3)
         rctij[1:] -= rct_i[0:-1]
-        rctij = Vectrz.image(rctij, box)
+        rctij = box.image(rctij)
         rctij = np.cumsum(rctij, axis=0)
 
-        r_crds = Vectrz.image(coords - r_centers, box)
+        r_crds = box.image(coords - r_centers)
         for i, lst in enumerate(r_indx):
             r_crds[lst] += rctij[i]
 
         # move molecule centers in the box
         m_centers = Vectrz.geom_centers(r_crds, m_indx, box)
-        m_crds = r_crds - m_centers + Vectrz.image(m_centers, box)
+        m_crds = r_crds - m_centers + box.image(m_centers)
 
         # move backbone center to origin
         m_crds -= Vectrz.geom_center(m_crds, b_indx, box)
